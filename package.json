@@ -1,0 +1,15 @@
+{
+  "name": "jacky-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/chensidi/jacky-cli.git",
+  "author": "JackyCheung <2541012495@qq.com>",
+  "license": "MIT",
+  "bin": {
+    "jacky": "./cli/index.js"
+  },
+  "dependencies": {
+    "commander": "8.3.0",
+    "inquirer": "8.2.4"
+  }
+}
