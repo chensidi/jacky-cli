@@ -6,7 +6,7 @@ const { prompt } = require('inquirer')
 program
   .command('git')
   .action(() => {
-    require('./git')()
+    require('./gitConfig')()
   })
 
 
