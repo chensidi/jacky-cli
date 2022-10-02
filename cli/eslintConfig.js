@@ -27,8 +27,8 @@ function createEslintConfig(config) {
 
 function addEslintScripts() {
   const scripts = {
-    "eslint:lint": "eslint --ext .js,.ts,.tsx,.jsx src/",
-    "eslint:fix": "eslint --fix --ext .js,.ts,.tsx,.jsx src/"
+    "eslint:lint": "eslint --ext .js,.ts,.tsx,.jsx,.vue src/",
+    "eslint:fix": "eslint --fix --ext .js,.ts,.tsx,.jsx,.vue src/"
   }
   mergePkg('scripts', scripts)
 }

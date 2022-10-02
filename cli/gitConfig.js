@@ -1,8 +1,3 @@
-/* 
-  1. 添加插件cz-customizable，规范本地提交
-  2. 添加.cz.config.js 控制提交格式
-  3. 添加package.json commitizen字段，打开git cz命令
-*/
 const child = require('child_process')
 const fs = require('fs')
 const { resolve } = require('path')
@@ -15,7 +10,7 @@ module.exports = async () => {
   createCzConfig()
   createCommitLintConfig()
   cfgPackage()
-  initHusky()
+  gitHooksInit()
   eslintHandle()
 }
 
@@ -26,6 +21,7 @@ function addDeps() {
     '@commitlint/cli',
     '@commitlint/config-conventional',
     'husky',
+    'lint-staged'
   ]
   return addDep(deps, '-D')
 }
@@ -67,7 +63,7 @@ function cfgPackage() {
 }
 
 // husky初始化
-function initHusky() {
+function setCommitMsg() {
   child.spawnSync('npx.cmd', ['husky', 'install'], {
     cwd: process.cwd(),
     stdio: 'inherit',
@@ -78,4 +74,23 @@ function initHusky() {
     '.husky/commit-msg',
     'npx --no -- commitlint --edit ${1}',
   ])
+}
+
+function setPreCommit() {
+  child.spawnSync('npx.cmd', [
+    'husky',
+    'add',
+    '.husky/pre-commit',
+    'npx lint-staged',
+  ])
+  fs.cpSync(
+    resolve(__dirname, './template/.lintstagedrc.json'),
+    resolve(process.cwd(), '.lintstagedrc.json')
+  )
+}
+
+// 添加git hooks
+function gitHooksInit() {
+  setCommitMsg()
+  setPreCommit()
 }
