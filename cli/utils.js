@@ -1,4 +1,3 @@
-const { prompt } = require('inquirer')
 const { resolve } = require('path')
 const fs = require('fs')
 const child = require('child_process')
@@ -14,7 +13,8 @@ function mergePkg(prop, value) {
 }
 
 function addDep(depList, m) {
-  child.spawnSync('yarn.cmd', [
+  const cmd = getPkgManage()
+  child.spawnSync(cmd, [
     'add',
     ...depList,
     m
@@ -22,6 +22,41 @@ function addDep(depList, m) {
     stdio: 'inherit',
     cwd: process.cwd()
   })
+}
+
+function getPkgManage() {
+  const yarnLock = fs.existsSync(resolve(process.cwd(), 'yarn.lock'))
+  const npmLock = fs.existsSync(resolve(process.cwd(), 'package-lock.json'))
+  const pnpmLock = fs.existsSync(resolve(process.cwd(), 'pnpm-lock.yaml'))
+  const win32 = process.platform === 'win32'
+
+  if (yarnLock) {
+    return win32 ? 'yarn.cmd' : 'yarn'
+  } 
+  if (npmLock) {
+    return win32 ? 'npm.cmd': 'npm'
+  }
+  if (pnpmLock) {
+    return win32 ? 'pnpm.cmd': 'pnpm'
+  }
+
+  const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
+  const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
+  if (pkgInfo) {
+    return win32 ? pkgInfo.name + '.cmd' : pkgInfo.name
+  } else {
+    return win32 ? 'npm.cmd': 'npm'
+  }
+}
+
+function pkgFromUserAgent(userAgent) {
+  if (!userAgent) return undefined
+  const pkgSpec = userAgent.split(' ')[0]
+  const pkgSpecArr = pkgSpec.split('/')
+  return {
+    name: pkgSpecArr[0],
+    version: pkgSpecArr[1]
+  }
 }
 
 module.exports = {

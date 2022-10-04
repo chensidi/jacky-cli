@@ -5,6 +5,8 @@ const { resolve } = require('path')
 const eslintHandle = require('./eslintConfig')
 const { addDep } = require('./utils')
 
+const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
+
 module.exports = async () => {
   addDeps()
   createCzConfig()
@@ -64,11 +66,11 @@ function cfgPackage() {
 
 // husky初始化
 function setCommitMsg() {
-  child.spawnSync('npx.cmd', ['husky', 'install'], {
+  child.spawnSync(npxCmd, ['husky', 'install'], {
     cwd: process.cwd(),
     stdio: 'inherit',
   })
-  child.spawnSync('npx.cmd', [
+  child.spawnSync(npxCmd, [
     'husky',
     'add',
     '.husky/commit-msg',
@@ -77,7 +79,7 @@ function setCommitMsg() {
 }
 
 function setPreCommit() {
-  child.spawnSync('npx.cmd', [
+  child.spawnSync(npxCmd, [
     'husky',
     'add',
     '.husky/pre-commit',

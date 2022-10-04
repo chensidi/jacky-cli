@@ -1,0 +1,31 @@
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true
+  },
+  extends: [
+    <% if (react) { %>
+    'plugin:react/recommended',
+    <% } %>
+    <% if (vue) { %>
+    'plugin:vue/vue3-essential',
+    <% } %>
+    'standard'
+  ],
+  overrides: [
+  ],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module'
+  },
+  plugins: [
+    <% if (react) { %>
+    'react',
+    <% } %>
+    <% if (vue) { %>
+    'vue',
+    <% } %>
+  ],
+  rules: {
+  }
+}
