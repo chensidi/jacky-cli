@@ -1,16 +1,22 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
+    node: false
   },
-  extends: [
+  extends: [-%>
     <% if (react) { %>
-    'plugin:react/recommended',
-    <% } %>
+    'plugin:react/recommended',-%>
+    <% } %>-%>
     <% if (vue) { %>
-    'plugin:vue/vue3-essential',
+    'plugin:vue/vue3-essential',-%>
+    <% } %>-%>
+    <% if (!useTs) { %>
+    'standard'-%>
+    <% } %>-%>
+    <% if (useTs) { %>
+    'standard-with-typescript'-%>
     <% } %>
-    'standard'
   ],
   overrides: [
   ],
@@ -18,12 +24,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: [
+  plugins: [-%>
     <% if (react) { %>
-    'react',
-    <% } %>
+    'react',-%>
+    <% } %>-%>
     <% if (vue) { %>
-    'vue',
+    'vue',_%>-%>
     <% } %>
   ],
   rules: {

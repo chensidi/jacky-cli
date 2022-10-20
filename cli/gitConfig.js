@@ -23,7 +23,7 @@ function addDeps() {
     '@commitlint/cli',
     '@commitlint/config-conventional',
     'husky',
-    'lint-staged'
+    'lint-staged',
   ]
   return addDep(deps, '-D')
 }
@@ -45,7 +45,9 @@ function createCommitLintConfig() {
 // 添加package commitizen，script字段
 function cfgPackage() {
   const curPkgPath = resolve(process.cwd(), 'package.json')
-  const curPkg = require(curPkgPath)
+  // const curPkg = require(curPkgPath)
+  let curPkg = fs.readFileSync(curPkgPath, { encoding: 'utf-8' })
+  curPkg = JSON.parse(curPkg)
   const { config = {}, scripts = {} } = curPkg
   Object.assign(config, {
     commitizen: {

@@ -11,6 +11,19 @@
   "dependencies": {
     "commander": "8.3.0",
     "ejs": "^3.1.8",
-    "inquirer": "8.2.4"
+    "esbuild": "^0.15.10",
+    "inquirer": "8.2.4",
+    "rollup": "^2.79.1"
+  },
+  "scripts": {
+    "build:es": "node esbuild.config.js",
+    "build:rup": "rollup -c rollup.config.js"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^14.1.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-preserve-shebangs": "^0.2.0",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

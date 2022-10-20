@@ -2,8 +2,7 @@ const { prompt } = require('inquirer')
 const { resolve } = require('path')
 const ejs = require('ejs')
 const fs = require('fs')
-const child = require('child_process')
-const { config, deps } = require('./template/eslintConfig')
+const { deps } = require('./template/eslintConfig')
 const { mergePkg, addDep } = require('./utils')
 
 async function selectFrame() {
@@ -11,9 +10,9 @@ async function selectFrame() {
     {
       type: 'list',
       choices: [
-        { value: 0, name: 'react' },
-        { value: 1, name: 'vue' },
-        { value: -1, name: 'none' },
+        { value: 0, name: 'none' },
+        { value: 1, name: 'react' },
+        { value: 2, name: 'vue' },
       ],
       name: 'frame',
       message: '选择一种js框架',
@@ -31,13 +30,6 @@ async function selectFrame() {
   }
 }
 
-function createEslintConfig(config) {
-  fs.cpSync(
-    resolve(__dirname, './template', config),
-    resolve(process.cwd(), '.eslintrc.js')
-  )
-}
-
 function addEslintScripts() {
   const scripts = {
     'eslint:lint': 'eslint --ext .js,.ts,.tsx,.jsx,.vue src/',
@@ -46,25 +38,40 @@ function addEslintScripts() {
   mergePkg('scripts', scripts)
 }
 
-function summaryLintRc(frame) {
-  const eslintRc = fs.readFileSync(resolve(__dirname, './template/.eslintrc.ejs'), { encoding: 'utf-8' })
-  let eslintRcStr = ejs.render(eslintRc, { react: false, vue: false })
-  if (frame == 0) {
-    eslintRcStr = ejs.render(eslintRc, { react: true, vue: false })
-  } else if (frame == 1) {
-    eslintRcStr = ejs.render(eslintRc, { vue: true, react: false })
+function summaryLintRc(frame, useTs) {
+  const eslintRc = fs.readFileSync(
+    resolve(__dirname, './template/.eslintrc.ejs'),
+    { encoding: 'utf-8' }
+  )
+  let eslintRcStr = ejs.render(eslintRc, { react: false, vue: false, useTs })
+  if (frame == 1) {
+    eslintRcStr = ejs.render(eslintRc, { react: true, vue: false, useTs })
+  } else if (frame == 2) {
+    eslintRcStr = ejs.render(eslintRc, { vue: true, react: false, useTs })
   }
   fs.writeFileSync(resolve(process.cwd(), '.eslintrc.js'), eslintRcStr)
 }
 
+function addEsIgnore() {
+  fs.copyFileSync(
+    resolve(__dirname, './template/.eslintignore'),
+    resolve(process.cwd(), '.eslintignore')
+  )
+}
+
 module.exports = async () => {
   const { frame, useTs } = await selectFrame()
-  if (frame > -1) {
-    const dep = deps[frame]
-    addDep(Object.keys(dep), '-D')
-    const cfg = config[frame]
-    // createEslintConfig(cfg)
-    summaryLintRc(frame)
-    addEslintScripts()
+  const dep = deps[frame]
+  const requireDeps = Object.keys(dep)
+  summaryLintRc(frame, useTs)
+  addEslintScripts()
+  addEsIgnore()
+  if (useTs) {
+    requireDeps.push(
+      'eslint-config-standard-with-typescript',
+      'typescript',
+      '@typescript-eslint/eslint-plugin'
+    )
   }
+  addDep(requireDeps, '-D')
 }
