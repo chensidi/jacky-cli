@@ -1,0 +1,15 @@
+import Mock from 'mockjs'
+
+Mock.setup({
+  'timeout': '100-2000'
+})
+
+const mockFiles = import.meta.glob('./**/*.{ts,js}')
+for (const path in mockFiles) {
+  importMock(path)
+}
+
+async function importMock(path) {
+  const { default: config } = await import(path)
+  Mock.mock(config.url, config.method, config.data)
+}

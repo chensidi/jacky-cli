@@ -13,6 +13,7 @@ module.exports = async () => {
   createCommitLintConfig()
   cfgPackage()
   gitHooksInit()
+  // 是否添加eslint，询问
   eslintHandle()
 }
 

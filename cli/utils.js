@@ -14,8 +14,9 @@ function mergePkg(prop, value) {
 
 function addDep(depList, m) {
   const cmd = getPkgManage()
+  const opt = cmd.includes('yarn') ? 'add' : 'i'
   child.spawnSync(cmd, [
-    'add',
+    opt,
     ...depList,
     m
   ], {

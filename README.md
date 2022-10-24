@@ -34,3 +34,13 @@ yarn add jacky-cli -g
 命令行：**jakcy addEslint**
 
 在命令行执行过程中，会询问你选择某种js框架去做lint，目前仅内置了react，vue两大主流框架，比如你的项目是基于vue的，那么你就可以选择vue选项，eslint就会包含对vue框架的语法检测，同时脚手架会询问你是否会用到ts，并以ts的规范来检测你的code。
+
+### 添加mock数据功能
+
+命令行：***jacky addMock*
+
+mock是干嘛的就不多说了，相信大家都是老手了，当使用这条命令行后，系统会在你的根目录下生成 mock 文件夹，里面会存放一个入口 index.js 文件，和一份dome示例的mock数据，并且脚手架会帮你自动下载好mock依赖包
+
+使用方式很简单，在你项目的入口文件，一般都是 src/index.js 或 main.js，在入口js里导入根目录下的mock/index.js，这样你所有编写的mock数据都被成功注入了，此后你在mock文件夹里添加任意的数据文件，mock工具都能帮你全部递归注册，但是你添加的这些数据文件需要和demo.js中的导出对象格式保持一致
+
+> 目前仅支持在vite项目中添加mock，后续会在webpack中实现该功能
