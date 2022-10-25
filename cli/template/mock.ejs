@@ -4,12 +4,33 @@ Mock.setup({
   'timeout': '100-2000'
 })
 
-const mockFiles = import.meta.glob('./**/*.{ts,js}')
-for (const path in mockFiles) {
-  importMock(path)
-}
-
-async function importMock(path) {
+<% if (vite) { %>
+async function importMock(path<% if(ts) {%>: string<% } %>) {
   const { default: config } = await import(path)
   Mock.mock(config.url, config.method, config.data)
 }
+
+function registMockInVite() {
+  const mockFiles = import.meta.glob('./**/*.{ts,js}')
+  for (const path in mockFiles) {
+    importMock(path)
+  }
+}
+
+registMockInVite()
+<% } %>
+<% if (webpack) { %>
+function registMockInWebpack() {
+  const files = require.context('./', true, /\.js$/)
+  console.log(files.keys());
+  files.keys().filter(item => !item.includes('./index')).forEach(file => {
+    const config = files(file).default
+    Mock.mock(config.url, config.method, config.data)
+  })
+}
+
+registMockInWebpack()
+<% } %>
+
+
+
