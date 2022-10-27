@@ -33,5 +33,49 @@ module.exports = {
     <% } %>
   ],
   rules: {
+    {
+      'prefer-const': [
+        // 优先使用const
+        'error',
+        {
+          destructuring: 'all',
+          ignoreReadBeforeAssign: true,
+        },
+      ],
+      'no-const-assign': 'error', // const变量不允许修改
+      'no-var': 2, // 不准使用var
+      'comma-dangle': [
+        // 拖尾逗号情况
+        'error',
+        {
+          arrays: 'never',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'never',
+        },
+      ],
+      '@typescript-eslint/comma-dangle': [
+        'error',
+        {
+          arrays: 'never',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'never',
+        },
+      ],
+      'no-new-object': 'error', // 不允许new Object，应采用字面量
+      'quote-props': [
+        // 对象属性添加引号
+        'warn',
+        'as-needed', // 有必要时添加
+        {
+          keywords: true, // 关键字必须加引号
+        },
+      ],
+      quotes: ['error', 'single'], // 字符串用单引号
+      'no-unused-vars': 1, // 未使用的变量警告
+    },
   }
 }

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-const { program } = require("commander")
+const { program } = require('commander')
 const gitConfig = require('./gitConfig.js')
 const eslintConfig = require('./eslintConfig')
 const mock = require('./mock')
+const prettier = require('./prettier')
 
 program
   .command('addGitRules')
@@ -26,5 +27,11 @@ program
     mock()
   })
 
-program.parse(process.argv)
+program
+  .command('addPrettier')
+  .description('给项目安装prettier')
+  .action(() => {
+    prettier()
+  })
 
+program.parse(process.argv)
